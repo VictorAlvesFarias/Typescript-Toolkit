@@ -103,8 +103,7 @@ export class WebSocketService {
             this.listeners.set(event, existing.filter(h => h !== handler));
     }
     handleError(error) {
-        var _a;
-        console.error(`[IWebSocketError ${error.code}]: ${error.message}`, (_a = error.details) !== null && _a !== void 0 ? _a : '');
+        console.error(`[IWebSocketError ${error.code}]: ${error.message}`, error.details ?? '');
         this.webSocketErrorCallback(error);
     }
     getConnectionUrl() {
