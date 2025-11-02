@@ -147,4 +147,3 @@ export class WebSocketService {
 }
 
 export const webSocketService = new WebSocketService()
-webSocketService.connect()
