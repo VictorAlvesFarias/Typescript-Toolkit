@@ -6,7 +6,6 @@ export interface IBaseHttpQueryFilters {
     searchTerm?: string
 }
 
-
 export interface IBaseHttpResponseApi<T> {
     errors: any
     sucess: boolean
@@ -17,7 +16,6 @@ export interface IBaseHttpResponseApi<T> {
 
 export interface IBaseHttpServiceMediator {
     config: () => AxiosRequestConfig
-    then<T>(res: T): void
     catch: (error: any) => any
 }
 
@@ -52,8 +50,6 @@ export abstract class BaseHttpService {
             }
         )
             .then((response: AxiosResponse<T, any>) => {
-                this.mediators().then<T>(response.data)
-
                 return response.data
             })
             .catch((error) => {
@@ -70,8 +66,6 @@ export abstract class BaseHttpService {
 
         return axios.patch(this.route(route), body, c)
             .then((response: AxiosResponse<T, any>) => {
-                this.mediators().then<T>(response.data)
-
                 return response.data
             })
             .catch((error) => {
@@ -87,8 +81,6 @@ export abstract class BaseHttpService {
 
         return axios.get(this.route(route), c)
             .then((response: AxiosResponse<T, any>) => {
-                this.mediators().then<T>(response.data)
-
                 return response.data
             })
             .catch((error) => {
@@ -105,8 +97,6 @@ export abstract class BaseHttpService {
 
         return axios.put(this.route(route), body, c)
             .then((response: AxiosResponse<T, any>) => {
-                this.mediators().then<T>(response.data)
-
                 return response.data
             })
             .catch((error) => {
@@ -122,8 +112,6 @@ export abstract class BaseHttpService {
 
         const result = axios.delete(this.route(route), c)
             .then((response: AxiosResponse<T, any>) => {
-                this.mediators().then<T>(response.data)
-
                 return response.data
             })
             .catch((error) => {
