@@ -115,4 +115,3 @@ export class WebSocketService {
     webSocketErrorCallback(error) { }
 }
 export const webSocketService = new WebSocketService();
-webSocketService.connect();
