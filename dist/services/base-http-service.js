@@ -11,7 +11,6 @@ export class BaseHttpService {
             onUploadProgress: progressEventCallback
         })
             .then((response) => {
-            this.mediators().then(response.data);
             return response.data;
         })
             .catch((error) => {
@@ -22,7 +21,6 @@ export class BaseHttpService {
         const c = config ?? this.mediators().config();
         return axios.patch(this.route(route), body, c)
             .then((response) => {
-            this.mediators().then(response.data);
             return response.data;
         })
             .catch((error) => {
@@ -33,7 +31,6 @@ export class BaseHttpService {
         const c = config ?? this.mediators().config();
         return axios.get(this.route(route), c)
             .then((response) => {
-            this.mediators().then(response.data);
             return response.data;
         })
             .catch((error) => {
@@ -44,7 +41,6 @@ export class BaseHttpService {
         const c = config ?? this.mediators().config();
         return axios.put(this.route(route), body, c)
             .then((response) => {
-            this.mediators().then(response.data);
             return response.data;
         })
             .catch((error) => {
@@ -55,7 +51,6 @@ export class BaseHttpService {
         const c = config ?? this.mediators().config();
         const result = axios.delete(this.route(route), c)
             .then((response) => {
-            this.mediators().then(response.data);
             return response.data;
         })
             .catch((error) => {

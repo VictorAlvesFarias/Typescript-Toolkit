@@ -13,7 +13,6 @@ export interface IBaseHttpResponseApi<T> {
 }
 export interface IBaseHttpServiceMediator {
     config: () => AxiosRequestConfig;
-    then<T>(res: T): void;
     catch: (error: any) => any;
 }
 export interface IRoute {
