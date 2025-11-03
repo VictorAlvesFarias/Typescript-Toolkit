@@ -28,7 +28,7 @@ export declare class WebSocketService {
     on<T = any>(event: string, handler: WebSocketEventHandler<T>): void;
     off<T = any>(event: string, handler: WebSocketEventHandler<T>): void;
     protected handleError(error: IWebSocketError): void;
-    private getConnectionUrl;
+    protected getConnectionUrl(): string;
     protected getReconnectionDelay(): number;
     protected webSocketErrorCallback(error: IWebSocketError): void;
 }
