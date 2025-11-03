@@ -135,7 +135,7 @@ export class WebSocketService {
         this.webSocketErrorCallback(error)
     }
 
-    private getConnectionUrl(): string {
+    protected getConnectionUrl(): string {
         return "http://localhost:8081/ws/"
     }
 
