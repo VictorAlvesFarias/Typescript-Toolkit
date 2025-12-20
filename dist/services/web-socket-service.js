@@ -9,6 +9,7 @@ export class WebSocketService {
     constructor() {
         this.socket = null;
         this.listeners = new Map();
+        this.url = this.getConnectionUrl();
     }
     static getInstance() {
         if (!this.instance)
@@ -19,9 +20,9 @@ export class WebSocketService {
         if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING))
             return;
         try {
-            this.socket = new WebSocket(this.getConnectionUrl());
+            this.socket = new WebSocket(this.url);
             this.socket.onopen = () => {
-                console.log('WebSocket connected at ' + this.getConnectionUrl());
+                console.log('WebSocket connected at ' + this.url);
             };
             this.socket.onmessage = (event) => {
                 try {
