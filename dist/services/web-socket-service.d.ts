@@ -18,9 +18,8 @@ export declare class WebSocketService {
     private static instance;
     private socket;
     private reconnectTimeout;
-    private readonly url;
+    private url;
     private listeners;
-    constructor();
     static getInstance(): WebSocketService;
     connect(): void;
     disconnect(): void;

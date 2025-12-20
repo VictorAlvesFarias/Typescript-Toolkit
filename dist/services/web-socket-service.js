@@ -8,8 +8,8 @@ export var IWebSocketErrorCode;
 export class WebSocketService {
     constructor() {
         this.socket = null;
+        this.url = "";
         this.listeners = new Map();
-        this.url = this.getConnectionUrl();
     }
     static getInstance() {
         if (!this.instance)
@@ -20,6 +20,12 @@ export class WebSocketService {
         if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING))
             return;
         try {
+            this.url = this.getConnectionUrl();
+            if (!this.url?.trim()) {
+                console.error(`WebSocket connection URL is invalid.`);
+                this.reconnectTimeout = setTimeout(() => this.connect(), this.getReconnectionDelay());
+                return;
+            }
             this.socket = new WebSocket(this.url);
             this.socket.onopen = () => {
                 console.log('WebSocket connected at ' + this.url);
@@ -32,7 +38,6 @@ export class WebSocketService {
                         return;
                     }
                     for (let index = 0; index < handlers.length; index++) {
-                        console.log('WebSocket event received: ' + data.Event);
                         const element = handlers[index];
                         const result = element(data);
                         if (result === false) {
@@ -99,8 +104,15 @@ export class WebSocketService {
     }
     off(event, handler) {
         const existing = this.listeners.get(event);
-        if (existing)
-            this.listeners.set(event, existing.filter(h => h !== handler));
+        if (existing) {
+            const filtered = existing.filter(h => h !== handler);
+            if (filtered.length === 0) {
+                this.listeners.delete(event);
+            }
+            else {
+                this.listeners.set(event, filtered);
+            }
+        }
     }
     handleError(error) {
         console.error(`[IWebSocketError ${error.code}]: ${error.message}`, error.details ?? '');
