@@ -22,12 +22,8 @@ export class WebSocketService {
     private static instance: WebSocketService
     private socket: WebSocket | null = null
     private reconnectTimeout: any
-    private readonly url: string
+    private url: string = ""
     private listeners: Map<string, WebSocketEventHandler<any>[]> = new Map()
-
-    public constructor() {
-        this.url = this.getConnectionUrl()
-    }
 
     public static getInstance(): WebSocketService {
         if (!this.instance) this.instance = new WebSocketService()
@@ -38,6 +34,14 @@ export class WebSocketService {
         if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) return
 
         try {
+            this.url = this.getConnectionUrl()
+
+            if (!this.url?.trim()) {
+                console.error(`WebSocket connection URL is invalid.`)
+                this.reconnectTimeout = setTimeout(() => this.connect(), this.getReconnectionDelay())
+                return
+            }
+
             this.socket = new WebSocket(this.url)
 
             this.socket.onopen = () => {
@@ -54,7 +58,6 @@ export class WebSocketService {
                     }
 
                     for (let index = 0; index < handlers.length; index++) {
-                        console.log('WebSocket event received: ' + data.Event);
                         const element = handlers[index];
                         const result = element(data);
 
@@ -63,7 +66,8 @@ export class WebSocketService {
                         }
                     }
 
-                } catch (err) {
+                }
+                catch (err) {
                     this.handleError({
                         code: IWebSocketErrorCode.INVALID_MESSAGE,
                         message: 'Failed to parse incoming WebSocket message.',
@@ -127,7 +131,14 @@ export class WebSocketService {
 
     public off<T = any>(event: string, handler: WebSocketEventHandler<T>): void {
         const existing = this.listeners.get(event)
-        if (existing) this.listeners.set(event, existing.filter(h => h !== handler))
+        if (existing) {
+            const filtered = existing.filter(h => h !== handler)
+            if (filtered.length === 0) {
+                this.listeners.delete(event)
+            } else {
+                this.listeners.set(event, filtered)
+            }
+        }
     }
 
     protected handleError(error: IWebSocketError): void {
